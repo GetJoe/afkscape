@@ -5,6 +5,7 @@ import Cookies from 'universal-cookie';
 import Navigator from 'J:/afkscape/src/index.js';
 import SkillElement from 'J:/afkscape/src/SkillElement.js';
 import LevelTracker from 'J:/afkscape/src/LevelTracker.js';
+import Inventory from 'J:/afkscape/src/Inventory.js';
 
 //image imports
 import Regular_Tree_Art from "J:/afkscape/src/img/Regular_Tree.png";
@@ -61,12 +62,14 @@ class TreeChopping extends React.Component {
     }
   }
 
-  //TreeChopping Component Functions Start
-  xpIncrease = xpval => {
-    this.setState({treeChoppingExp: this.state.treeChoppingExp + xpval})
+  //COMPONENT FUNCTIONS START
+  handleSkillElementClick = (xpValue, logType) => {
+    this.setState({treeChoppingExp: this.state.treeChoppingExp + xpValue});
+    localStorage.setItem('normalLogs', parseInt(localStorage.getItem('normalLogs')) + 1);
   }
 
   handleTreeMenuCallback = (treevalue, xpvalue) => {
+    console.log(localStorage.getItem('normalLogs') == undefined);
     this.setState({current_tree_number: treevalue, current_tree_xp: xpvalue})
   }
 
@@ -83,7 +86,7 @@ class TreeChopping extends React.Component {
   render(){
 
     if(this.state.renderNavigator){
-      cookies.set('treeChoppingExp', this.state.treeChoppingExp, {path: '/'});
+      localStorage.setItem('treeChoppingExp', this.state.treeChoppingExp);
       return(
         <Navigator />
       );
@@ -92,7 +95,7 @@ class TreeChopping extends React.Component {
     return(
       <div className="tree_chopping_container" id="tree_chopping_container">
 
-        <div className="skillElement" onClick={() => {this.xpIncrease(this.state.current_tree_xp * (this.state.current_axe_number + 1))}}>
+        <div className="skillElement" onClick={() => {this.handleSkillElementClick(this.state.current_tree_xp * (this.state.current_axe_number + 1))}}>
           <SkillElement skillIndex={this.state.current_tree_number} skill_element_img={skill_element_img} />
         </div>
 
@@ -102,10 +105,11 @@ class TreeChopping extends React.Component {
 
         <LevelTracker skillName={"TreeChopping"} currentLevel={this.state.treeChoppingLevel} currentExp={this.state.treeChoppingExp} parentCallback={this.handleLevelTracker} />
 
+        <Inventory normalLogs={parseInt(localStorage.getItem('normalLogs'))} />
+
         <div className="home_button_container">
           <button className="home_button" onClick={()=>{this.setState({renderNavigator: true})}}>Home</button>
         </div>
-
 
       </div>
     );

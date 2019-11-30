@@ -8,18 +8,24 @@ import "./index.css"
 import Game_Logo from "J:/afkscape/src/img/aslogo.png";
 
 //imports for game components
-import TreeChopping from 'J:/afkscape/src/tree_chopping.js'
-import OreHunting from 'J:/afkscape/src/OreHunting/OreHunting.js'
+import TreeChopping from 'J:/afkscape/src/TreeChopping.js';
+import OreHunting from 'J:/afkscape/src/OreHunting/OreHunting.js';
+import Inventory from 'J:/afkscape/src/Inventory.js';
 
 const cookies = new Cookies();
 
 const buildNavigatorState = () => ({
+  freshStart: true,
   renderForest: false,
   renderMine: false,
 
-  treeChoppingExp: (cookies.get('treeChoppingExp') == undefined) ? 0 : parseInt(cookies.get('treeChoppingExp')),
-  oreHuntingExp: (cookies.get('oreHuntingExp') == undefined) ? 0 : parseInt(cookies.get('oreHuntingExp'))
+  treeChoppingExp: (localStorage.getItem('treeChoppingExp') == undefined) ? 0 : parseInt(localStorage.getItem('treeChoppingExp')),
+  oreHuntingExp: (localStorage.getItem('oreHuntingExp') == undefined) ? 0 : parseInt(localStorage.getItem('oreHuntingExp'))
 });
+
+const initializeInventoryEmpty = () => {
+  localStorage.setItem('normalLogs', 0);
+}
 
 
 
@@ -31,15 +37,21 @@ class Navigator extends React.Component {
 
   render(){
 
+    if(this.state.freshStart){
+      initializeInventoryEmpty();
+    }
+
+
     if(this.state.renderForest){
       return(
       <TreeChopping treeChoppingExp={this.state.treeChoppingExp}  />
+
       );
     }
 
     if(this.state.renderMine){
       return(
-        <OreHunting />
+        <OreHunting oreHuntingExp={this.state.oreHuntingExp} />
       );
     }
 
@@ -55,6 +67,7 @@ class Navigator extends React.Component {
           <button className="navigator_button" onClick={()=>{this.setState({renderForest: true})}}>Forest</button>
           <button className="navigator_button" onClick={()=>{this.setState({renderMine: true})}}>Mines</button>
         </div>
+
 
       </div>
 

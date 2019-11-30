@@ -1,4 +1,5 @@
 import React from 'react';
+import Cookies from 'universal-cookie';
 
 
 //component imports
@@ -11,8 +12,10 @@ import OreHuntingSkillElementBar from 'J:/afkscape/src/OreHunting/OreHuntingSkil
 //image imports
 import Unmined_Copper from 'J:/afkscape/src/img/unmined_cu.png'
 import Unmined_Iron from 'J:/afkscape/src/img/unmined_fe.png'
+import Unmined_Runeite from 'J:/afkscape/src/img/unmined_runeite.png'
 
-var skill_element_img = [Unmined_Copper, Unmined_Iron]
+const cookies = new Cookies();
+var skill_element_img = [Unmined_Copper, Unmined_Iron, Unmined_Runeite]
 
 class OreHunting extends React.Component{
   constructor(props){
@@ -24,7 +27,7 @@ class OreHunting extends React.Component{
       skillExpValue: 17.5,
 
 
-      oreHuntingExp: 0,
+      oreHuntingExp: this.props.oreHuntingExp,
       oreHuntingLevel: 1,
       equipmentValue: 0
     }
@@ -49,6 +52,8 @@ class OreHunting extends React.Component{
   render(){
 
     if(this.state.renderNavigator){
+      //cookies.set('oreHuntingExp', this.state.oreHuntingExp, {path: '/'});
+      localStorage.setItem('oreHuntingExp', this.state.oreHuntingExp);
       return(
         <Navigator />
       );
@@ -61,7 +66,7 @@ class OreHunting extends React.Component{
           <SkillElement skillIndex={this.state.skillIndex} skill_element_img={skill_element_img} />
         </div>
 
-      <OreHuntingSkillElementBar parentCallback={this.handleSkillElementSelect} />
+      <OreHuntingSkillElementBar parentCallback={this.handleSkillElementSelect} oreHuntingLevel={this.state.oreHuntingLevel} />
 
       <OreEquipmentBar parentCallback={this.handleEquipmentSelect} />
 
