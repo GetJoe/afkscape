@@ -10,17 +10,22 @@ import Game_Logo from "J:/afkscape/src/img/aslogo.png";
 //imports for game components
 import TreeChopping from 'J:/afkscape/src/TreeChopping.js';
 import OreHunting from 'J:/afkscape/src/OreHunting/OreHunting.js';
+import SafeCracking from 'J:/afkscape/src/SafeCracking/SafeCracking.js';
 import Inventory from 'J:/afkscape/src/Inventory.js';
 
 const cookies = new Cookies();
 
 const buildNavigatorState = () => ({
   freshStart: true,
+
+  //Render Flags for game navigation
   renderForest: false,
   renderMine: false,
+  renderVault: false,
 
   treeChoppingExp: (localStorage.getItem('treeChoppingExp') == undefined) ? 0 : parseInt(localStorage.getItem('treeChoppingExp')),
-  oreHuntingExp: (localStorage.getItem('oreHuntingExp') == undefined) ? 0 : parseInt(localStorage.getItem('oreHuntingExp'))
+  oreHuntingExp: (localStorage.getItem('oreHuntingExp') == undefined) ? 0 : parseInt(localStorage.getItem('oreHuntingExp')),
+  safeCrackingExp: (localStorage.getItem('safeCrackingExp') == undefined) ? 0 : parseInt(localStorage.getItem('safeCrackingExp'))
 });
 
 const initializeInventoryEmpty = () => {
@@ -41,17 +46,20 @@ class Navigator extends React.Component {
       initializeInventoryEmpty();
     }
 
-
+    //Check State flags to determine which area to render
     if(this.state.renderForest){
       return(
       <TreeChopping treeChoppingExp={this.state.treeChoppingExp}  />
-
       );
     }
-
-    if(this.state.renderMine){
+    else if(this.state.renderMine){
       return(
         <OreHunting oreHuntingExp={this.state.oreHuntingExp} />
+      );
+    }
+    else if(this.state.renderVault){
+      return(
+        <SafeCracking safeCrackingExp={this.state.safeCrackingExp} />
       );
     }
 
@@ -66,6 +74,7 @@ class Navigator extends React.Component {
         <div className="navigator_button_container">
           <button className="navigator_button" onClick={()=>{this.setState({renderForest: true})}}>Forest</button>
           <button className="navigator_button" onClick={()=>{this.setState({renderMine: true})}}>Mines</button>
+          <button className="navigator_button" onClick={()=>{this.setState({renderVault: true})}}>Vault</button>
         </div>
 
 
